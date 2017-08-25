@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -39,6 +38,8 @@
     <p>Hello world! This is HTML5 Boilerplate.</p>
     <p>This is a link to <a href="./some-page/">some page</a>.</p>
     <script>
+        (function (document) {
+    'use strict';
         !function () {
             "querySelector" in window.document && "addEventListener" in window && (window.document.documentElement.className += "js")
         }();
@@ -137,6 +138,7 @@
                 }
             }
         }
+    });
     </script>
     <script>
         window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
