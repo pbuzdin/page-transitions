@@ -38,109 +38,106 @@
     <p>Hello world! This is Some page.</p>
     <p>This is a link back to <a href="../">previous page</a>.</p>
     <script>
-        (function (document) {
-    'use strict';
-        !function () {
-            "querySelector" in window.document && "addEventListener" in window && (window.document.documentElement.className += "js")
-        }();
-        function hasClass(el, className) {
-            if (el.classList)
-                return el.classList.contains(className)
-            else
-                return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+       !function(){
+  "querySelector"in window.document&&"addEventListener"in window&&(window.document.documentElement.className+="js")
+}();
+
+	// check class on element
+	function hasClass(el, className) {
+		if (el.classList)
+			return el.classList.contains(className)
+		else
+			return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+	}
+
+	// add class
+	function addClass(el, className) {
+		if (el.classList)
+			el.classList.add(className)
+		else if (!hasClass(el, className)) el.className += " " + className
+	}
+	
+	// remove class
+	function removeClass(el, className) {
+		if (el.classList)
+			el.classList.remove(className)
+		else if (hasClass(el, className)) {
+			var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+			el.className=el.className.replace(reg, ' ')
+		}
+	}
+
+// Function to animate the scroll
+  function smoothScroll(anchor, duration) {
+
+    // Calculate how far and how fast to scroll
+    var startLocation = window.pageYOffset;
+    var endLocation = anchor.offsetTop;
+    var distance = endLocation - startLocation;
+    var increments = distance/(duration/16);
+    var stopAnimation;
+
+    // Scroll the page by an increment, and check if it's time to stop
+    var animateScroll = function () {
+      window.scrollBy(0, increments);
+      stopAnimation();
+    };
+
+    // If scrolling down
+    if ( increments >= 0 ) {
+        // Stop animation when you reach the anchor OR the bottom of the page
+        stopAnimation = function () {
+        var travelled = window.pageYOffset;
+        if ((travelled >= (endLocation - increments)) || ((window.innerHeight + travelled) >= document.body.offsetHeight) ) {
+          clearInterval(runAnimation);
         }
-        var htmlEl = document.querySelector('.js');
-        // add class
-        function addClass(el, className) {
-            if (el.classList)
-                el.classList.add(className)
-            else if (!hasClass(el, className)) el.className += " " + className
+      };
+    }
+    // If scrolling up
+    else {
+      // Stop animation when you reach the anchor OR the top of the page
+      stopAnimation = function () {
+      var travelled = window.pageYOffset;
+        if ( travelled <= (endLocation || 0) ) {
+          clearInterval(runAnimation);
         }
+      };
+    }
+    // Loop the animation function
+    var runAnimation = setInterval(animateScroll, 16);
+  };
+  
+  // fix back functionality in safari 
+  window.onpageshow = function(event) {
+    if (event.persisted) {
+      window.location.reload() 
+    }
+  };
 
-        // remove class
-        function removeClass(el, className) {
-            if (el.classList)
-                el.classList.remove(className)
-            else if (hasClass(el, className)) {
-                var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
-                el.className = el.className.replace(reg, ' ')
-            }
-        }
-        // Function to animate the scroll
-        function smoothScroll(anchor, duration) {
-
-            // Calculate how far and how fast to scroll
-            var startLocation = window.pageYOffset;
-            var endLocation = anchor.offsetTop;
-            var distance = endLocation - startLocation;
-            var increments = distance / (duration / 16);
-            var stopAnimation;
-
-            // Scroll the page by an increment, and check if it's time to stop
-            var animateScroll = function () {
-                window.scrollBy(0, increments);
-                stopAnimation();
-            };
-
-            // If scrolling down
-            if (increments >= 0) {
-                // Stop animation when you reach the anchor OR the bottom of the page
-                stopAnimation = function () {
-                    var travelled = window.pageYOffset;
-                    if ((travelled >= (endLocation - increments)) || ((window.innerHeight + travelled) >= document.body.offsetHeight)) {
-                        clearInterval(runAnimation);
-                    }
-                };
-            }
-            // If scrolling up
-            else {
-                // Stop animation when you reach the anchor OR the top of the page
-                stopAnimation = function () {
-                    var travelled = window.pageYOffset;
-                    if (travelled <= (endLocation || 0)) {
-                        clearInterval(runAnimation);
-                    }
-                };
-            }
-            // Loop the animation function
-            var runAnimation = setInterval(animateScroll, 16);
-        };
-
-        // fix back functionality in safari 
-        window.onpageshow = function (event) {
-            if (event.persisted) {
-                window.location.reload()
-            }
-        };
-
-        //select all links on the page
-        var links = document.querySelectorAll('a');
-        var htmlEl = document.querySelectorAll('html');
-
-        for (var i = 0; i < links.length; i++) {
-            if (location.hostname === links[i].hostname || !links[i].hostname.length) {
-                if (links[i].href.match('#')) {
-                    smoothScroll(links[i], 250)
-                }
-                else if (links[i].href.match('mailto')) {
-                    // act like a mailto link
-                }
-                else {
-                    links[i].addEventListener('click', function (e) {
-                        var self = this;
-                        e.preventDefault()
-                        addClass(htmlEl, 'exit')
-                        setTimeout(function () {
-                            window.location = self
-                        }, 350)
-
-                    })
-                }
-            }
-        }
-    });
-    </script>
-    <script>
+  //select all links on the page
+  var links = document.querySelectorAll('a');
+  var htmlEl = document.querySelector('.js');
+  for (var i = 0; i < links.length; i++) {
+    if (location.hostname === links[i].hostname || !links[i].hostname.length ) {
+      if(links[i].href.match('#')){
+        smoothScroll(links[i], 250)
+      }
+      else if(links[i].href.match('mailto')){
+        // act like a mailto link
+      }
+      else {
+        links[i].addEventListener('click', function(e){
+          var self = this;
+          e.preventDefault()
+          addClass(htmlEl, 'exit')
+          setTimeout(function() { 
+            window.location = self
+          }, 350) 
+          
+        })
+      }
+    }
+  }
         window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
         ga('create', 'UA-XXXXX-Y', 'auto'); ga('send', 'pageview')
     </script>
