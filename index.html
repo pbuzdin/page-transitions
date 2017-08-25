@@ -42,6 +42,29 @@
         !function () {
             "querySelector" in window.document && "addEventListener" in window && (window.document.documentElement.className += "js")
         }();
+        function hasClass(el, className) {
+            if (el.classList)
+                return el.classList.contains(className)
+            else
+                return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+        }
+        var htmlEl = document.querySelector('.js');
+        // add class
+        function addClass(el, className) {
+            if (el.classList)
+                el.classList.add(className)
+            else if (!hasClass(el, className)) el.className += " " + className
+        }
+
+        // remove class
+        function removeClass(el, className) {
+            if (el.classList)
+                el.classList.remove(className)
+            else if (hasClass(el, className)) {
+                var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+                el.className = el.className.replace(reg, ' ')
+            }
+        }
         // Function to animate the scroll
         function smoothScroll(anchor, duration) {
 
@@ -91,6 +114,7 @@
 
         //select all links on the page
         var links = document.querySelectorAll('a');
+        var htmlEl = document.querySelectorAll('html');
 
         for (var i = 0; i < links.length; i++) {
             if (location.hostname === links[i].hostname || !links[i].hostname.length) {
