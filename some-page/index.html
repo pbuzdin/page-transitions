@@ -1,11 +1,10 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Page transitions</title>
-    <meta name="description" content="Page transitions">
+    <title>Page transitions - Some page</title>
+    <meta name="description" content="Page transitions - Some page">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--
         <link rel="manifest" href="site.webmanifest">
@@ -39,9 +38,34 @@
     <p>Hello world! This is Some page.</p>
     <p>This is a link back to <a href="../">previous page</a>.</p>
     <script>
+        (function (document) {
+    'use strict';
         !function () {
             "querySelector" in window.document && "addEventListener" in window && (window.document.documentElement.className += "js")
         }();
+        function hasClass(el, className) {
+            if (el.classList)
+                return el.classList.contains(className)
+            else
+                return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+        }
+        var htmlEl = document.querySelector('.js');
+        // add class
+        function addClass(el, className) {
+            if (el.classList)
+                el.classList.add(className)
+            else if (!hasClass(el, className)) el.className += " " + className
+        }
+
+        // remove class
+        function removeClass(el, className) {
+            if (el.classList)
+                el.classList.remove(className)
+            else if (hasClass(el, className)) {
+                var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+                el.className = el.className.replace(reg, ' ')
+            }
+        }
         // Function to animate the scroll
         function smoothScroll(anchor, duration) {
 
@@ -91,6 +115,7 @@
 
         //select all links on the page
         var links = document.querySelectorAll('a');
+        var htmlEl = document.querySelectorAll('html');
 
         for (var i = 0; i < links.length; i++) {
             if (location.hostname === links[i].hostname || !links[i].hostname.length) {
@@ -113,6 +138,7 @@
                 }
             }
         }
+    });
     </script>
     <script>
         window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
@@ -120,5 +146,4 @@
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async defer></script>
 </body>
-
 </html>
