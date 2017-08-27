@@ -14,6 +14,11 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         -->
+	    <script>
+       !function(){
+  "querySelector"in window.document&&"addEventListener"in window&&(window.document.documentElement.className+="js")
+}();
+	</script>
     <style>
 	    	body {
 		max-width: 60rem;
@@ -44,10 +49,6 @@
     <p>Hello world! This is Some page.</p>
     <p>This is a link back to <a href="../">previous page</a>.</p>
     <script>
-       !function(){
-  "querySelector"in window.document&&"addEventListener"in window&&(window.document.documentElement.className+="js")
-}();
-
 	// check class on element
 	function hasClass(el, className) {
 		if (el.classList)
